@@ -1,0 +1,19 @@
+{
+  "name": "roblox-kit-base",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Shared": { "$path": "src/shared" },
+      "Game": { "$path": "games/exemplo/shared" }
+    },
+    "ServerScriptService": {
+      "Server": { "$path": "src/server" },
+      "Game": { "$path": "games/exemplo/server" }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Client": { "$path": "src/client" }
+      }
+    }
+  }
+}
