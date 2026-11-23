@@ -100,9 +100,9 @@ Histórico: o commit da formiga (`64d2d5e`) existia só num zip (`Downloads\robl
 4. O utilizador usava Remote Control / claude.ai/code. Agora passa para a app desktop. Deve manter a janela do `rojo serve` aberta para as edições chegarem ao Studio.
 5. **O Python também não está instalado** (o comando `python` abre o atalho da Microsoft Store).
 
-### Código (encontrados na revisão; nenhum foi corrigido)
-6. **DataService, corrida entre autosave e release:** um autosave (`release=false`) em curso quando o jogador sai pode terminar *depois* do save de release e voltar a gravar a trava. Na entrada seguinte noutro servidor, o load espera cerca de 25 s até roubar a trava. Correção possível: marcar o jogador como "a sair" e ignorar autosaves desse jogador, ou serializar os saves por jogador.
-7. **DataService, save duplicado no shutdown:** o `BindToClose` chama `onPlayerRemoving` e o evento `PlayerRemoving` também. Isso dá dois saves por jogador e gasta orçamento de DataStore. Inofensivo, mas desperdiça pedidos.
+### Código (encontrados na revisão)
+6. ~~**DataService, corrida entre autosave e release**~~ **Corrigido em 2026-11-23 (falta testar no Studio):** flags `saving`/`releasing` por jogador. O autosave ignora quem está a sair ou já tem save em curso; o save de saída espera o autosave em curso terminar, por isso é sempre o último.
+7. ~~**DataService, save duplicado no shutdown**~~ **Corrigido junto com o 6:** a flag `releasing` faz a segunda chamada (`BindToClose` + `PlayerRemoving`) sair logo.
 8. **DataService:** não há verificação de orçamento (`GetRequestBudgetForRequestType`) nem retentativa nos saves.
 9. **CurrencyService.spend** não valida se `amount` é inteiro/finito (NaN passa no `amount < 0`). Hoje só é chamado por código do servidor, mas convém validar.
 10. **ZoneEnemy**:
@@ -122,6 +122,6 @@ Histórico: o commit da formiga (`64d2d5e`) existia só num zip (`Downloads\robl
 2. (Feito em 2026-11-23: identidade git local `hallisonmkb <hallisonmkb@users.noreply.github.com>` só neste repo; push para `origin/main`.) Confirmar com o utilizador se o repo no GitHub deve ficar privado.
 3. Testar no Studio: Play, clicar, sair e voltar (as moedas devem persistir), e entrar na `ZonaFormiga` (a formiga persegue e morde).
 4. Ajustar o comportamento da formiga conforme o feedback do utilizador (valores em `Config.Enemies`).
-5. Corrigir os pontos 6–9 de §6, a começar pela corrida de saves (6).
+5. Corrigir os pontos 8–9 de §6 (6 e 7 já corrigidos em 2026-11-23).
 6. Atualizar o README (ZoneEnemy e arranque automático).
 7. Módulos do kit ainda por fazer, segundo o README: ProgressionService (Level/XP/Rebirths já estão em `DefaultData`), ShopService, MonetizationService (game passes e dev products via `ProcessReceipt`), DailyRewardService (`DailyStreak` já está em `DefaultData`), Leaderboards (OrderedDataStore), UI Kit (substitui o HUD provisório) e AnalyticsService.

@@ -27,6 +27,10 @@ local profiles: { [Player]: Data } = {}
 local loadedEvent = Instance.new("BindableEvent")
 DataService.Loaded = loadedEvent.Event -- (player, data)
 local beforeRelease: { (Player, Data) -> () } = {}
+-- Controle de saves por jogador, para o autosave nunca terminar depois do save de saída
+-- (o que voltaria a gravar a trava e faria o próximo servidor esperar para carregar).
+local saving: { [Player]: boolean } = {} -- autosave em andamento
+local releasing: { [Player]: boolean } = {} -- jogador saindo (save final em andamento)
 
 local jobId = if game.JobId ~= "" then game.JobId else "studio"
 
@@ -128,17 +132,33 @@ end
 
 local function onPlayerRemoving(player: Player)
 	local data = profiles[player]
-	if not data then
+	-- BindToClose e PlayerRemoving podem chamar isto para o mesmo jogador: salva só uma vez.
+	if not data or releasing[player] then
 		return
 	end
+	releasing[player] = true
 	for _, callback in beforeRelease do
 		local ok, err = pcall(callback, player, data)
 		if not ok then
 			warn(`[DataService] erro antes de salvar {player.Name}: {err}`)
 		end
 	end
+	-- Espera um autosave em andamento terminar, para o save de saída ser sempre o último.
+	while saving[player] do
+		task.wait()
+	end
 	save(player, data, true)
 	profiles[player] = nil
+	releasing[player] = nil
+end
+
+local function autosave(player: Player, data: Data)
+	if saving[player] or releasing[player] then
+		return
+	end
+	saving[player] = true
+	save(player, data, false) -- save() já usa pcall, então a flag sempre é limpa
+	saving[player] = nil
 end
 
 -- Retorna o perfil se já carregou (ou nil).
@@ -170,7 +190,7 @@ function DataService.start()
 		while true do
 			task.wait(AUTOSAVE_INTERVAL)
 			for player, data in profiles do
-				task.spawn(save, player, data, false)
+				task.spawn(autosave, player, data)
 			end
 		end
 	end)
