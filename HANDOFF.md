@@ -20,30 +20,21 @@ O projeto de exemplo (`games/exemplo`) é um jogo de clicar para ganhar moedas, 
 
 ---
 
-## 2. ⚠️ Estado atual: a pasta local está desatualizada
+## 2. Estado atual do repositório
 
-Há **duas versões** do projeto:
+Tudo sincronizado: esta pasta = `origin/main` em https://github.com/hallisonmkb/RobloxInsetos.
 
-| Onde | Commits | Conteúdo |
-| --- | --- | --- |
-| `C:\Roblox\Projetos\roblox-kit-base` (esta pasta) | `79295f3` (inicial) → `d16e8b2` (HANDOFF/CLAUDE) | kit base + jogo de clique |
-| `%USERPROFILE%\Downloads\roblox-kit-base (1).zip` | `79295f3` → **`64d2d5e`** "Inimigo preso a uma zona (ZoneEnemy) e bootstrap inicia todos os módulos do jogo" | o mesmo, mais o inimigo de zona |
-
-Diferenças do zip em relação a esta pasta (verificadas ficheiro a ficheiro; o resto é idêntico):
+Histórico: o commit da formiga (`64d2d5e`) existia só num zip (`Downloads\roblox-kit-base (1).zip`) e foi trazido em 2026-11-23 com `git fetch` + **merge** (`38e32ba`), não rebase, porque os commits de HANDOFF/CLAUDE já estavam publicados. O zip já não é necessário. Esse commit trouxe:
 
 1. **`games/exemplo/server/ZoneEnemy.luau`** (novo): inimigo preso a uma zona.
 2. **`src/server/init.server.luau`** (alterado): em vez de fazer `require` só do `Mechanic`, inicia **todos** os ModuleScripts de `ServerScriptService.Game` que tenham `start()`, cada um dentro de `pcall`.
 3. **`games/exemplo/shared/Config.luau`** (alterado): nova secção `Config.Enemies`.
 
-A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **parou antes de copiar os ficheiros para o projeto**. A extração temporária já não existe.
-
-**Primeiro passo da próxima sessão:** trazer o commit `64d2d5e` para esta pasta (ver §7, passo 1).
-
 ---
 
 ## 3. O que já está feito
 
-### Kit base (commit `79295f3`, presente nesta pasta)
+### Kit base (commit `79295f3`)
 - Estrutura Rojo (`default.project.json`) e toolchain via Rokit (`rokit.toml`).
 - **DataService**: save/load por jogador com trava de sessão, autosave a cada 60 s, save ao sair e no `BindToClose`, e reconciliação de campos novos da `Config.DefaultData`.
 - **CurrencyService**: moedas, multiplicador, renda offline, `leaderstats` e atributo `Coins` no jogador.
@@ -52,7 +43,7 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 - **Jogo de exemplo**: `Mechanic.luau`, em que clicar dá moedas (cooldown de 0,15 s e limite de 15 chamadas/s).
 - README com instruções de setup para Windows.
 
-### Inimigo de zona (commit `64d2d5e`, **só no zip**)
+### Inimigo de zona (commit `64d2d5e`)
 - `ZoneEnemy.luau`: para cada entrada de `Config.Enemies`, procura no Workspace o `Model` e a `Part` da zona pelo nome. O modelo é ancorado e movido pelo servidor com `PivotTo` no `Heartbeat`, por isso não precisa de Humanoid. Passeia em pontos aleatórios da zona, persegue o jogador mais próximo que esteja dentro dela, para a 60 % do alcance e aplica `TakeDamage` respeitando o cooldown.
 - Ao arrancar, `neutralize()` destrói todos os scripts que vieram com o modelo (proteção contra backdoors do Toolbox), ancora as partes e desliga colisões.
 - Config atual: modelo `"Fire Worker"`, zona `"ZonaFormiga"`, dano 10, alcance 5, cooldown 1 s, velocidade a perseguir 14, a passear 5, margem 2 e `FacingOffset` 0.
@@ -75,9 +66,9 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 | `src/server/Services/CurrencyService.luau` | `…Server.Services` | API: `add(player, base, ignoreMultiplier?)`, `spend`, `get`, `getMultiplier`, `setMultiplier`. Publica `Coins` como atributo e em `leaderstats`. |
 | `src/shared/Remotes.luau` | `ReplicatedStorage.Shared` | `Remotes.onServer(nome, maxPorSegundo, handler)` no servidor; `Remotes.get(nome):FireServer(...)` no cliente. Cria a pasta `ReplicatedStorage.Remotes`. |
 | `src/client/init.client.luau` | `StarterPlayerScripts.Client` | HUD provisório. Lê o atributo `Coins` e dispara o remote `Click`. |
-| `games/exemplo/shared/Config.luau` | `ReplicatedStorage.Game` | `GameName`, `DefaultData`, `Currency`, `Click` e (no zip) `Enemies`. |
+| `games/exemplo/shared/Config.luau` | `ReplicatedStorage.Game` | `GameName`, `DefaultData`, `Currency`, `Click` e `Enemies`. |
 | `games/exemplo/server/Mechanic.luau` | `ServerScriptService.Game` | Mecânica de clique. |
-| `games/exemplo/server/ZoneEnemy.luau` | `ServerScriptService.Game` | **Só no zip.** Inimigo de zona. |
+| `games/exemplo/server/ZoneEnemy.luau` | `ServerScriptService.Game` | Inimigo de zona. |
 | `README.md` | — | Setup para Windows, estrutura, estado dos módulos e regras. |
 
 ---
@@ -103,7 +94,7 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 ## 6. Problemas em aberto
 
 ### Ambiente
-1. **A pasta local está um commit atrás** (ver §2).
+1. ~~A pasta local está um commit atrás~~ **Resolvido em 2026-11-23** (ver §2).
 2. ~~O `git` não está no PATH~~ **Resolvido em 2026-11-23:** Git for Windows 2.56.1 instalado via winget (inclui Git Bash). **Atenção à identidade:** o `git config --global` está com a conta de trabalho (`noesis.hbittencourt`), mas os commits deste repo foram feitos como `hallisonmkb <hallisonmkb@users.noreply.github.com>`. Decidido: este repo usa a identidade pessoal, configurada localmente (sem `--global`); a global de trabalho fica intacta.
 3. ~~Sem remote~~ **Resolvido em 2026-11-23:** `origin` = https://github.com/hallisonmkb/RobloxInsetos (branch `main`, com tracking). O login ficou guardado no Git Credential Manager. Nota: o Claude Code define `GCM_INTERACTIVE=never`; se o GCM voltar a pedir login, correr o push com `$env:GCM_INTERACTIVE='always'` para abrir a janela. O repo pareceu **público** (o `ls-remote` funcionou sem login); confirmar com o utilizador se deve ficar privado.
 4. O utilizador usava Remote Control / claude.ai/code. Agora passa para a app desktop. Deve manter a janela do `rojo serve` aberta para as edições chegarem ao Studio.
@@ -114,7 +105,7 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 7. **DataService, save duplicado no shutdown:** o `BindToClose` chama `onPlayerRemoving` e o evento `PlayerRemoving` também. Isso dá dois saves por jogador e gasta orçamento de DataStore. Inofensivo, mas desperdiça pedidos.
 8. **DataService:** não há verificação de orçamento (`GetRequestBudgetForRequestType`) nem retentativa nos saves.
 9. **CurrencyService.spend** não valida se `amount` é inteiro/finito (NaN passa no `amount < 0`). Hoje só é chamado por código do servidor, mas convém validar.
-10. **ZoneEnemy** (no zip):
+10. **ZoneEnemy**:
     - o inimigo não tem vida e não pode ser morto;
     - só funciona com zonas planas (altura fixa calculada no início);
     - mover um modelo ancorado com `PivotTo` a cada frame no servidor replica de forma pouco suave para o cliente;
@@ -127,13 +118,8 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 
 ## 7. Próximos passos (por ordem)
 
-1. **Sincronizar com o zip.** Esta pasta já tem um commit próprio (`d16e8b2`, com HANDOFF/CLAUDE) sobre `79295f3`, e o zip tem `64d2d5e` sobre o mesmo `79295f3`. **Não substituir a `.git/`**, porque isso perderia o `d16e8b2`. Em vez disso:
-   - extrair `Downloads\roblox-kit-base (1).zip` para uma pasta temporária **nova e vazia**;
-   - `git fetch "<pasta>\roblox-kit-base" main:zoneenemy` e confirmar `git log zoneenemy` → `64d2d5e`;
-   - `git merge zoneenemy` (não há conflitos esperados: os ficheiros não se sobrepõem), ou `git rebase zoneenemy` para histórico linear;
-   - apagar a pasta temporária e o branch `zoneenemy`.
-   **Confirmar com o utilizador antes.**
-2. (Feito: identidade local `hallisonmkb <hallisonmkb@users.noreply.github.com>` configurada só neste repo; HANDOFF/CLAUDE commitados em `d16e8b2`.) (Feito: push para `origin/main`.) Depois do merge do passo 1, fazer `git push`.
+1. (Feito em 2026-11-23: commit da formiga trazido do zip por merge.)
+2. (Feito em 2026-11-23: identidade git local `hallisonmkb <hallisonmkb@users.noreply.github.com>` só neste repo; push para `origin/main`.) Confirmar com o utilizador se o repo no GitHub deve ficar privado.
 3. Testar no Studio: Play, clicar, sair e voltar (as moedas devem persistir), e entrar na `ZonaFormiga` (a formiga persegue e morde).
 4. Ajustar o comportamento da formiga conforme o feedback do utilizador (valores em `Config.Enemies`).
 5. Corrigir os pontos 6–9 de §6, a começar pela corrida de saves (6).
