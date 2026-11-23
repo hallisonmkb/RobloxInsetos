@@ -29,7 +29,7 @@ o servidor valida.
 | `src/shared/` | ReplicatedStorage.Shared | Código usado pelos dois lados (Remotes) |
 | `src/client/` | StarterPlayerScripts.Client | Interface e input |
 | `games/exemplo/shared/` | ReplicatedStorage.Game | `Config.luau`: balanceamento do jogo |
-| `games/exemplo/server/` | ServerScriptService.Game | `Mechanic.luau`: a mecânica central |
+| `games/exemplo/server/` | ServerScriptService.Game | Mecânicas do jogo: `Mechanic.luau` (clique) e `ZoneEnemy.luau` (inimigos). Todo ModuleScript aqui com `start()` arranca sozinho. |
 
 ## Módulos
 
@@ -39,6 +39,7 @@ o servidor valida.
 | CurrencyService (moedas, multiplicador, renda offline) | Pronto |
 | RemoteGuard (`src/shared/Remotes.luau`, limite de chamadas) | Pronto |
 | Config | Pronto |
+| ZoneEnemy (exemplo): inimigos presos a uma zona (`Config.Enemies`), andantes ou voadores (que também pousam), com tamanho (`Scale`), vários iguais (`Count`), movimento realista e patas, antenas e asas animadas em modelos com Motor6D. Modelos próprios feitos em código em `games/exemplo/server/Models/` (formiga, pulgão, mosquito-tigre) | Pronto (formiga própria por testar) |
 | ProgressionService, ShopService, MonetizationService, DailyRewardService, Leaderboards, UI Kit, AnalyticsService | A fazer |
 
 ## Regras
