@@ -105,7 +105,7 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 ### Ambiente
 1. **A pasta local está um commit atrás** (ver §2).
 2. ~~O `git` não está no PATH~~ **Resolvido em 2026-11-23:** Git for Windows 2.56.1 instalado via winget (inclui Git Bash). **Atenção à identidade:** o `git config --global` está com a conta de trabalho (`noesis.hbittencourt`), mas os commits deste repo foram feitos como `hallisonmkb <hallisonmkb@users.noreply.github.com>`. Decidido: este repo usa a identidade pessoal, configurada localmente (sem `--global`); a global de trabalho fica intacta.
-3. **O repositório não tem remote** (`.git/config` sem `[remote]`). O código só existe neste PC e nos zips.
+3. ~~Sem remote~~ **Resolvido em 2026-11-23:** `origin` = https://github.com/hallisonmkb/RobloxInsetos (branch `main`, com tracking). O login ficou guardado no Git Credential Manager. Nota: o Claude Code define `GCM_INTERACTIVE=never`; se o GCM voltar a pedir login, correr o push com `$env:GCM_INTERACTIVE='always'` para abrir a janela. O repo pareceu **público** (o `ls-remote` funcionou sem login); confirmar com o utilizador se deve ficar privado.
 4. O utilizador usava Remote Control / claude.ai/code. Agora passa para a app desktop. Deve manter a janela do `rojo serve` aberta para as edições chegarem ao Studio.
 5. **O Python também não está instalado** (o comando `python` abre o atalho da Microsoft Store).
 
@@ -133,7 +133,7 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
    - `git merge zoneenemy` (não há conflitos esperados: os ficheiros não se sobrepõem), ou `git rebase zoneenemy` para histórico linear;
    - apagar a pasta temporária e o branch `zoneenemy`.
    **Confirmar com o utilizador antes.**
-2. (Feito: identidade local `hallisonmkb <hallisonmkb@users.noreply.github.com>` configurada só neste repo; HANDOFF/CLAUDE commitados em `d16e8b2`.) Se o utilizador quiser, criar um remote privado no GitHub e fazer push.
+2. (Feito: identidade local `hallisonmkb <hallisonmkb@users.noreply.github.com>` configurada só neste repo; HANDOFF/CLAUDE commitados em `d16e8b2`.) (Feito: push para `origin/main`.) Depois do merge do passo 1, fazer `git push`.
 3. Testar no Studio: Play, clicar, sair e voltar (as moedas devem persistir), e entrar na `ZonaFormiga` (a formiga persegue e morde).
 4. Ajustar o comportamento da formiga conforme o feedback do utilizador (valores em `Config.Enemies`).
 5. Corrigir os pontos 6–9 de §6, a começar pela corrida de saves (6).
