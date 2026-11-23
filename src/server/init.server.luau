@@ -1,5 +1,5 @@
 --!strict
--- Inicia os serviços do kit base e depois a mecânica do jogo.
+-- Inicia os serviços do kit base e depois todos os módulos do jogo (pasta Game).
 
 local ServerScriptService = game:GetService("ServerScriptService")
 
@@ -16,8 +16,20 @@ for _, name in ORDER do
 	service.start()
 end
 
+-- Cada ModuleScript em games/<jogo>/server com função start() é iniciado.
 local gameFolder = ServerScriptService:WaitForChild("Game")
-local mechanic = require(gameFolder:WaitForChild("Mechanic")) :: any
-mechanic.start()
+for _, module in gameFolder:GetChildren() do
+	if module:IsA("ModuleScript") then
+		local ok, err = pcall(function()
+			local m = require(module) :: any
+			if type(m) == "table" and type(m.start) == "function" then
+				m.start()
+			end
+		end)
+		if not ok then
+			warn(`[Kit base] erro ao iniciar {module.Name}: {err}`)
+		end
+	end
+end
 
 print("[Kit base] servidor pronto")
