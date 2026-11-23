@@ -1,6 +1,6 @@
 # CLAUDE.md — roblox-kit-base
 
-Template dos jogos Roblox do utilizador. `src/` é o kit base genérico; `games/<nome>/` é o jogo específico (Config + mecânicas). Para o estado atual do trabalho, ler `HANDOFF.md`.
+Projeto do **jogo dos insetos** (GitHub RobloxInsetos). Apesar do nome da pasta, já não é o template dos outros jogos: cada jogo novo fica numa subpasta própria de `C:\Roblox\Projetos` e copia daqui só o kit (ver `C:\Roblox\CLAUDE.md`). `src/` é o kit base genérico; `games/exemplo/` é o jogo dos insetos (Config + mecânicas + modelos). Para o estado atual do trabalho, ler `HANDOFF.md`.
 
 ## Comunicação
 - Responder ao utilizador em português.
