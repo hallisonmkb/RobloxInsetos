@@ -26,7 +26,7 @@ Há **duas versões** do projeto:
 
 | Onde | Commits | Conteúdo |
 | --- | --- | --- |
-| `C:\Roblox\Projetos\roblox-kit-base` (esta pasta) | só `79295f3` (inicial) | kit base + jogo de clique |
+| `C:\Roblox\Projetos\roblox-kit-base` (esta pasta) | `79295f3` (inicial) → `d16e8b2` (HANDOFF/CLAUDE) | kit base + jogo de clique |
 | `%USERPROFILE%\Downloads\roblox-kit-base (1).zip` | `79295f3` → **`64d2d5e`** "Inimigo preso a uma zona (ZoneEnemy) e bootstrap inicia todos os módulos do jogo" | o mesmo, mais o inimigo de zona |
 
 Diferenças do zip em relação a esta pasta (verificadas ficheiro a ficheiro; o resto é idêntico):
@@ -104,7 +104,7 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 
 ### Ambiente
 1. **A pasta local está um commit atrás** (ver §2).
-2. ~~O `git` não está no PATH~~ **Resolvido em 2026-11-23:** Git for Windows 2.56.1 instalado via winget (inclui Git Bash). **Atenção à identidade:** o `git config --global` está com a conta de trabalho (`noesis.hbittencourt`), mas os commits deste repo foram feitos como `hallisonmkb <hallisonmkb@users.noreply.github.com>`. Antes do primeiro commit, perguntar ao utilizador qual usar (sugestão: `git config user.name/user.email` só neste repo, sem `--global`).
+2. ~~O `git` não está no PATH~~ **Resolvido em 2026-11-23:** Git for Windows 2.56.1 instalado via winget (inclui Git Bash). **Atenção à identidade:** o `git config --global` está com a conta de trabalho (`noesis.hbittencourt`), mas os commits deste repo foram feitos como `hallisonmkb <hallisonmkb@users.noreply.github.com>`. Decidido: este repo usa a identidade pessoal, configurada localmente (sem `--global`); a global de trabalho fica intacta.
 3. **O repositório não tem remote** (`.git/config` sem `[remote]`). O código só existe neste PC e nos zips.
 4. O utilizador usava Remote Control / claude.ai/code. Agora passa para a app desktop. Deve manter a janela do `rojo serve` aberta para as edições chegarem ao Studio.
 5. **O Python também não está instalado** (o comando `python` abre o atalho da Microsoft Store).
@@ -127,8 +127,13 @@ A sessão anterior encontrou o zip, extraiu-o para uma pasta temporária e **par
 
 ## 7. Próximos passos (por ordem)
 
-1. **Sincronizar com o zip.** Extrair `Downloads\roblox-kit-base (1).zip` para uma pasta temporária **nova e vazia** e confirmar que `.git/logs/HEAD` mostra o commit `64d2d5e`. Depois, com o `rojo serve` parado, copiar para esta pasta a `.git/` do zip (substituindo) e os 3 ficheiros diferentes: `src/server/init.server.luau`, `games/exemplo/shared/Config.luau` e `games/exemplo/server/ZoneEnemy.luau`. Preservar `HANDOFF.md` e `CLAUDE.md`, que não estão no zip. Confirmar que o `git status` só mostra esses dois como novos, se o git estiver disponível. **Antes de substituir, confirmar com o utilizador.**
-2. Definir a identidade git deste repo (§6.2), fazer commit de `HANDOFF.md`/`CLAUDE.md` e, se o utilizador quiser, criar um remote privado no GitHub e fazer push.
+1. **Sincronizar com o zip.** Esta pasta já tem um commit próprio (`d16e8b2`, com HANDOFF/CLAUDE) sobre `79295f3`, e o zip tem `64d2d5e` sobre o mesmo `79295f3`. **Não substituir a `.git/`**, porque isso perderia o `d16e8b2`. Em vez disso:
+   - extrair `Downloads\roblox-kit-base (1).zip` para uma pasta temporária **nova e vazia**;
+   - `git fetch "<pasta>\roblox-kit-base" main:zoneenemy` e confirmar `git log zoneenemy` → `64d2d5e`;
+   - `git merge zoneenemy` (não há conflitos esperados: os ficheiros não se sobrepõem), ou `git rebase zoneenemy` para histórico linear;
+   - apagar a pasta temporária e o branch `zoneenemy`.
+   **Confirmar com o utilizador antes.**
+2. (Feito: identidade local `hallisonmkb <hallisonmkb@users.noreply.github.com>` configurada só neste repo; HANDOFF/CLAUDE commitados em `d16e8b2`.) Se o utilizador quiser, criar um remote privado no GitHub e fazer push.
 3. Testar no Studio: Play, clicar, sair e voltar (as moedas devem persistir), e entrar na `ZonaFormiga` (a formiga persegue e morde).
 4. Ajustar o comportamento da formiga conforme o feedback do utilizador (valores em `Config.Enemies`).
 5. Corrigir os pontos 6–9 de §6, a começar pela corrida de saves (6).
