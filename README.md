@@ -40,7 +40,8 @@ o servidor valida.
 | RemoteGuard (`src/shared/Remotes.luau`, limite de chamadas) | Pronto |
 | Config | Pronto |
 | ZoneEnemy (exemplo): inimigos presos a uma zona (`Config.Enemies`), andantes ou voadores (que também pousam), com tamanho (`Scale`), vários iguais (`Count`), movimento realista e patas, antenas e asas animadas em modelos com Motor6D. Modelos próprios feitos em código em `games/exemplo/server/Models/` (formiga, pulgão, mosquito-tigre) | Pronto (formiga própria por testar) |
-| ProgressionService, ShopService, MonetizationService, DailyRewardService, Leaderboards, UI Kit, AnalyticsService | A fazer |
+| ProgressionService (XP, nível, `addXP`, evento `LevelUp`, atributos Level/XP/XPNext, leaderstats) | Pronto (por testar) |
+| ShopService, MonetizationService, DailyRewardService, Leaderboards, UI Kit, AnalyticsService | A fazer |
 
 ## Regras
 
